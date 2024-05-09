@@ -1,4 +1,4 @@
-# CompilerEngg-Aug19-EvaluationScript
+# CompilerEngg-EvaluationScript
 
 Script to evaluate Assignment 2 : Loop Reversal.
 

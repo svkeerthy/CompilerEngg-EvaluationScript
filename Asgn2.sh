@@ -2,9 +2,11 @@
 #-eu
 # DIR=${1:-`pwd`}
 
-LLVM_SRC=/home/utpal/llvm
-LLVM_BUILD=/home/utpal/build/release_90
-TEST_CASES=/home/utpal/Q2-Evaluation/test
+# set -x
+
+LLVM_SRC=/home/venkat/ace-eval/llvm-project/llvm
+LLVM_BUILD=/home/venkat/ace-eval/llvm-project/build_new
+TEST_CASES=/home/venkat/ace-eval/CompilerEngg-EvaluationScript/test
 LLI=$LLVM_BUILD/bin/lli
 #ASSIGN_DIR=/home/utpal/Assignment2
 #ASSIGN_DIR=$1
@@ -58,7 +60,7 @@ function generateIR() {
       -o $out \
       $f;
     "${LLVM_BUILD}"/bin/opt \
-      -S -mem2reg \
+      -S   -passes=mem2reg\
       -o $out \
       $out;
     echo $f
@@ -80,11 +82,8 @@ function runTest() {
     sed -e '1,/\/\/=======================================================/d' test$file.c
     echo "========================================================================"
 
-    "${LLVM_BUILD}"/bin/opt \
-      -load "${LLVM_BUILD}"/lib64/LoopReversal.so \
-      -loop-reversal -S \
-      test$file.ll -o test${file}.r.ll
-
+    "${LLVM_BUILD}"/bin/opt -load-pass-plugin "${LLVM_BUILD}"/lib/LoopReversal.so -passes=loop-reversal -S test$file.ll -o test${file}.r.ll
+   
     echo test$file.ll
     ref=`$LLI test$file.ll`
     echo $ref
